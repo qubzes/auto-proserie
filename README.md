@@ -1,316 +1,268 @@
-# AI-Powered Desktop Form Automation for ProSeries W2
+# ProSeries W2 Form Automation with AI
 
-> Automate W2 form filling in ProSeries (or any desktop tax software) using AI to intelligently understand and interact with the desktop application UI.
+**Automate W2 form filling in ProSeries desktop application using Gemini AI and Windows UI Automation**
 
-## 🎯 Overview
+This project provides an intelligent automation solution for filling W2 forms in the ProSeries tax preparation software. It uses Google's Gemini AI to understand the form structure and Windows UI Automation to interact with the desktop application.
 
-This project solves the problem of automating desktop applications that can't be automated with traditional web scraping. Instead of using fragile tab/selector methods, it uses:
+## 🌟 Features
 
-1. **macOS Accessibility APIs** - To read the desktop app's UI structure (like "inspecting HTML" but for desktop apps)
-2. **Google Gemini 2.0 Flash** - AI to intelligently map your data to the correct form fields
-3. **Smart Automation** - To fill forms accurately and handle complex UI patterns
+- **AI-Powered Form Recognition**: Uses Gemini 2.0 Flash to intelligently identify and fill form fields
+- **Windows UI Automation**: Leverages `pywinauto` for reliable desktop app interaction
+- **Multiple Input Formats**: Supports JSON, Excel, and CSV data files
+- **Batch Processing**: Fill multiple W2 forms automatically
+- **Data Validation**: Validates W2 data before processing
+- **Comprehensive Logging**: Detailed logs for troubleshooting
+- **Flexible Configuration**: Easy to configure via environment variables
 
-## ✨ Key Features
+## 📋 Prerequisites
 
-- 🤖 **AI-Powered Field Mapping** - Google Gemini 2.0 Flash understands your forms
-- 💰 **Cost-Effective** - ~$0.01 per W2 (10x cheaper than GPT-4)
-- ⚡ **Fast** - Process forms in seconds with low latency
-- 🔍 **UI Structure Inspector** - Examine desktop app UI like browser DevTools
-- 📊 **Batch Processing** - Fill multiple W2s from CSV files
-- ✅ **Data Validation** - Ensures SSN, EIN, and other fields are properly formatted
-- 🎨 **Flexible** - Works with ProSeries, Lacerte, and other desktop apps
-- 📝 **Detailed Logging** - See exactly what the AI is doing
-- 🆓 **Generous Free Tier** - 1,500 requests/day free
+- **Windows OS** (Windows 10 or later recommended)
+- **Python 3.8+** installed
+- **ProSeries** tax software installed and running
+- **Google API Key** with Gemini API access
 
-## 🚀 Quick Start
+## 🚀 Installation
 
-### 2. Prerequisites
-
-- macOS (required for Accessibility APIs)
-- Python 3.9+
-- Google API key (for Gemini)
-- ProSeries (or target application) installed
-
-### 2. Installation
+### Step 1: Clone or Download This Project
 
 ```bash
-# Clone or navigate to the project directory
-cd trustlelab
+cd /path/to/auto-proseries
+```
 
-# Create a virtual environment
-python3 -m venv venv
-source venv/bin/activate
+### Step 2: Install Python Dependencies
 
-# Install dependencies
+```bash
 pip install -r requirements.txt
 ```
 
-### 3. Configuration
+### Step 3: Set Up Environment Variables
 
-```bash
-# Copy the example environment file
-cp .env.example .env
+1. Copy the `.env.example` file to `.env`:
+   ```bash
+   copy .env.example .env
+   ```
 
-# Edit .env and add your API key
-# Get your key from: https://makersuite.google.com/app/apikey
-GOOGLE_API_KEY=your-google-api-key-here
-```
+2. Edit `.env` and add your Google API key:
+   ```
+   GOOGLE_API_KEY=your_actual_api_key_here
+   GEMINI_MODEL=gemini-2.0-flash-exp
+   ```
 
-### 4. Grant Accessibility Permissions
+### Step 4: Get Your Google API Key
 
-**Critical Step!** Your Python interpreter needs accessibility permissions:
-
-1. Open **System Preferences** → **Security & Privacy** → **Privacy** → **Accessibility**
-2. Click the lock 🔒 to make changes
-3. Add **Terminal** (or your IDE like VS Code/PyCharm)
-4. Restart Terminal/IDE after granting permissions
+1. Go to [Google AI Studio](https://makersuite.google.com/app/apikey)
+2. Create a new API key
+3. Copy the key to your `.env` file
 
 ## 📖 Usage
 
-### Inspect the UI (First Time)
+### Basic Usage
 
-Before automating, inspect the ProSeries UI to understand its structure:
+1. **Start ProSeries** application on your Windows machine
+2. **Navigate to the W2 form** section
+3. **Prepare your W2 data** in JSON, Excel, or CSV format
+4. **Run the automation**:
 
 ```bash
-python ui_inspector.py
+python run_automation.py --json sample_w2_data.json
 ```
-
-When prompted:
-1. Enter "ProSeries" as the application name
-2. Choose option 2 to list all text fields
-3. This helps you verify the app is accessible
 
 ### Generate Sample Data
 
-Create sample W2 data files:
+Create a sample W2 data file to get started:
 
 ```bash
-python w2_data_handler.py
+python run_automation.py --generate-sample my_w2_data.json
 ```
 
-This creates:
-- `sample_w2.json` - Single W2 data
-- `sample_w2.csv` - Multiple W2s for batch processing
+This creates a JSON file with example W2 data that you can edit with your actual information.
 
-### Fill W2 Forms
-
-1. **Open ProSeries** and navigate to a blank W2 form
-2. **Run the automation:**
+### Command-Line Options
 
 ```bash
-python ai_form_filler.py
+# Fill from JSON file
+python run_automation.py --json w2_data.json
+
+# Fill from Excel file
+python run_automation.py --excel w2_data.xlsx --sheet "W2 Data"
+
+# Fill from CSV file
+python run_automation.py --csv w2_data.csv
+
+# Use a specific Gemini model
+python run_automation.py --json w2_data.json --model gemini-2.0-flash-exp
+
+# Validate data without filling forms
+python run_automation.py --json w2_data.json --validate-only
+
+# Provide API key via command line
+python run_automation.py --json w2_data.json --api-key YOUR_API_KEY
 ```
 
-3. The script will:
-   - Connect to ProSeries
-   - Analyze the UI structure
-   - Ask AI to map fields
-   - Fill the form automatically
+## 📝 W2 Data Format
 
-### Custom Data
-
-Edit `sample_w2.json` with your data:
+### JSON Format
 
 ```json
-{
-  "employer_name": "Your Company",
-  "employer_ein": "12-3456789",
-  "employee_name": "Employee Name",
-  "employee_ssn": "123-45-6789",
-  "wages": "75000.00",
-  "federal_tax_withheld": "9500.00",
-  ...
-}
+[
+  {
+    "employee_name": "John Smith",
+    "employee_ssn": "123-45-6789",
+    "employee_address": "123 Main St",
+    "employee_city": "New York",
+    "employee_state": "NY",
+    "employee_zip": "10001",
+    "employer_name": "ABC Corporation",
+    "employer_ein": "12-3456789",
+    "employer_address": "456 Business Ave",
+    "employer_city": "New York",
+    "employer_state": "NY",
+    "employer_zip": "10002",
+    "wages": "75000.00",
+    "federal_tax_withheld": "12500.00",
+    "social_security_wages": "75000.00",
+    "social_security_tax": "4650.00",
+    "medicare_wages": "75000.00",
+    "medicare_tax": "1087.50",
+    "state": "NY",
+    "state_wages": "75000.00",
+    "state_tax": "4500.00"
+  }
+]
 ```
 
-## 🏗️ Project Structure
+### Excel Format
 
-```
-trustlelab/
-├── ai_form_filler.py      # Main automation script with AI
-├── ui_inspector.py        # Tool to inspect desktop app UI
-├── w2_data_handler.py     # Data validation and loading
-├── requirements.txt       # Python dependencies
-├── .env.example          # Environment variables template
-├── .env                  # Your API keys (git-ignored)
-├── sample_w2.json        # Sample single W2 data
-├── sample_w2.csv         # Sample batch W2 data
-└── README.md             # This file
-```
+Create an Excel file with a sheet named "W2 Data" and columns matching the JSON field names:
+
+| employee_name | employee_ssn | employer_name | employer_ein | wages | federal_tax_withheld | ... |
+|---------------|--------------|---------------|--------------|-------|----------------------|-----|
+| John Smith    | 123-45-6789  | ABC Corp      | 12-3456789   | 75000 | 12500                | ... |
+
+### CSV Format
+
+Similar to Excel, create a CSV file with headers matching the field names.
 
 ## 🔧 How It Works
 
-### 1. UI Structure Capture
+1. **Process Detection**: The script detects the running ProSeries application
+2. **UI Extraction**: Extracts the UI structure using Windows UI Automation API
+3. **AI Analysis**: Sends the UI structure to Gemini AI along with W2 data
+4. **Action Generation**: Gemini generates a sequence of actions to fill the form
+5. **Execution**: The script executes the actions to fill the form fields
+6. **Verification**: Logs all actions and results for verification
 
-The script uses macOS Accessibility APIs (via `atomacos`) to read the UI structure:
+## 📊 Required W2 Fields
 
-```python
-# Similar to browser DevTools, but for desktop apps
-ui_structure = {
-  "role": "AXTextField",
-  "title": "Employee Name",
-  "identifier": "employee_name_field",
-  "position": {"x": 100, "y": 200}
-}
+The following fields are required for each W2 record:
+
+- `employee_name` - Employee's full name
+- `employee_ssn` - Employee's Social Security Number
+- `employer_name` - Employer's legal name
+- `employer_ein` - Employer Identification Number
+- `wages` - Total wages, tips, other compensation
+- `federal_tax_withheld` - Federal income tax withheld
+
+## 🎯 Optional W2 Fields
+
+Additional fields you can include:
+
+- Employee address information (address, city, state, zip)
+- Employer address information
+- `social_security_wages` and `social_security_tax`
+- `medicare_wages` and `medicare_tax`
+- `social_security_tips`
+- `allocated_tips`
+- `dependent_care_benefits`
+- `nonqualified_plans`
+- State and local tax information
+
+## 🐛 Troubleshooting
+
+### ProSeries Not Detected
+
+- Ensure ProSeries is running before starting the automation
+- Check if the process name matches (the script looks for ProSeries.exe, ProSeriesBasic.exe, etc.)
+- Try starting ProSeries as Administrator
+
+### Form Fields Not Filled
+
+- Check the logs in `proseries_automation.log`
+- The W2 form must be the active/focused window
+- Ensure field names in your data match what ProSeries expects
+- Try adjusting the wait times in the script
+
+### API Errors
+
+- Verify your Google API key is valid
+- Check you have Gemini API access enabled
+- Ensure you haven't exceeded API rate limits
+
+### UI Automation Issues
+
+- Make sure Windows UI Automation is enabled
+- Run the script as Administrator if needed
+- Close any dialogs or pop-ups in ProSeries
+
+## 📁 Project Structure
+
 ```
-
-### 2. AI Field Mapping
-
-The UI structure is sent to Gemini 2.0 Flash:
-
-```
-"Here's the app UI structure and the W2 data. 
-Map each data field to the correct UI element."
-```
-
-AI responds with intelligent mappings:
-
-```json
-{
-  "mappings": [
-    {
-      "data_field": "employee_name",
-      "ui_title": "Employee Name",
-      "confidence": "high"
-    }
-  ]
-}
-```
-
-### 3. Form Filling
-
-The script uses the AI mapping to fill fields:
-
-```python
-element = find_element_by_criteria({"title": "Employee Name"})
-element.AXValue = "John Doe"
-```
-
-## 🎓 Advanced Usage
-
-### Using with Different Apps
-
-The system works with any desktop application that supports Accessibility APIs:
-
-```python
-automation = AIFormAutomation("Lacerte")  # or "Drake", etc.
-```
-
-### Batch Processing
-
-Process multiple W2s from CSV:
-
-```python
-from w2_data_handler import W2DataLoader
-
-w2_records = W2DataLoader.from_csv("sample_w2.csv")
-for w2_data in w2_records:
-    automation.fill_form(w2_data.to_dict())
-    # Wait for user to navigate to next form or automate that too
-```
-
-### Custom Field Mappings
-
-If AI mapping isn't perfect, you can review and adjust:
-
-```bash
-# After running, check these files:
-cat ui_debug.json       # See the full UI structure
-cat ai_mapping.json     # See how AI mapped fields
-```
-
-### Debugging
-
-Enable verbose logging:
-
-```python
-import logging
-logging.basicConfig(level=logging.DEBUG)
-```
-
-### Configuration Options
-
-### Environment Variables
-
-```bash
-# Google API Key (required)
-GOOGLE_API_KEY=your-api-key-here
-
-# Model (default: gemini-2.0-flash-exp)
-GEMINI_MODEL=gemini-2.0-flash-exp
-```
-
-### Customizing AI Behavior
-
-Edit the prompt in `ai_form_filler.py` → `_create_mapping_prompt()` to adjust how AI understands your specific form.
-
-## 🚨 Troubleshooting
-
-### "Failed to connect to application"
-
-**Solution:** 
-1. Ensure the app is running
-2. Check accessibility permissions (see step 4 above)
-3. Try using the app's exact name as shown in the menu bar
-
-### "AI could not create a mapping"
-
-**Solution:**
-1. Check `ui_debug.json` to see if UI structure was captured
-2. Try opening the exact form/window you want to fill
-3. Ensure your API key is valid and has credits
-
-### Fields Not Filling Correctly
-
-**Solution:**
-1. Run `ui_inspector.py` to examine field properties
-2. Check `ai_mapping.json` to see AI's confidence levels
-3. Some fields may need manual interaction first (clicking tabs, etc.)
-
-### Import Errors
-
-**Solution:**
-```bash
-# Reinstall dependencies
-pip install --upgrade -r requirements.txt
-
-# For atomacos specifically (macOS only):
-pip install atomacos pyobjc-framework-Cocoa pyobjc-framework-Quartz
+auto-proseries/
+├── proseries_w2_automation.py   # Main automation script
+├── w2_data_handler.py            # W2 data loading and validation
+├── run_automation.py             # CLI interface
+├── requirements.txt              # Python dependencies
+├── .env.example                  # Environment variables template
+├── sample_w2_data.json          # Sample W2 data
+├── README.md                     # This file
+└── proseries_automation.log      # Log file (created when running)
 ```
 
 ## 🔐 Security Notes
 
-- ⚠️ **Never commit `.env`** with real API keys (it's in `.gitignore`)
-- 🔒 **SSN/Tax Data**: Keep `sample_w2.json` and CSV files secure
-- 🛡️ **API Costs**: Gemini is very cost-effective (~$0.01 per W2)
-- 👁️ **Screen Recording**: macOS may ask for screen recording permissions
+- **Never commit your `.env` file** with real API keys
+- Store sensitive W2 data securely
+- Review logs before sharing (they may contain sensitive information)
+- Use strong access controls on files containing W2 data
 
-## 🤝 Contributing
+## ⚠️ Important Disclaimers
 
-Ideas for improvements:
-- [ ] Support for other tax forms (1099, W4, etc.)
-- [ ] Windows support using UI Automation
-- [ ] Visual verification (screenshot comparison)
-- [ ] Web interface for easier configuration
-- [ ] Docker containerization
+1. **Test First**: Always test with sample data before using with real W2 information
+2. **Verify Data**: Manually verify filled forms before submission
+3. **Backup**: Keep backups of your original data
+4. **Compliance**: Ensure your use complies with ProSeries license terms
+5. **No Warranty**: This tool is provided as-is without warranty
+
+## 🤝 Support
+
+For issues or questions:
+
+1. Check the log file: `proseries_automation.log`
+2. Review the troubleshooting section above
+3. Ensure all prerequisites are met
+4. Verify your W2 data format matches the examples
 
 ## 📄 License
 
-MIT License - feel free to modify and use for your own projects!
+This project is provided for educational and automation purposes. Ensure compliance with all applicable software licenses and regulations.
 
-## 🙏 Acknowledgments
+## 🔄 Updates and Improvements
 
-- Built with macOS Accessibility APIs
-- Powered by Google Gemini 2.0 Flash
-- Uses `atomacos` for UI automation
+To improve the automation:
 
-## 📞 Support
+1. **Adjust UI traversal depth** in `get_ui_tree_structure()` if needed
+2. **Customize field mappings** in the AI prompt
+3. **Add retry logic** for failed actions
+4. **Extend data validation** for specific business rules
 
-Having issues? 
-1. Check the Troubleshooting section above
-2. Review the debug files (`ui_debug.json`, `ai_mapping.json`)
-3. Run `ui_inspector.py` to verify connectivity
+## 💡 Tips for Best Results
+
+1. **Clean Data**: Ensure W2 data is properly formatted
+2. **Full Screen**: Run ProSeries in full screen for better UI detection
+3. **Minimize Distractions**: Close unnecessary windows
+4. **One Form at a Time**: Start with single forms before batch processing
+5. **Monitor First Run**: Watch the first automation run to ensure it works correctly
 
 ---
 
-**Made with ❤️ for tax professionals tired of manual data entry**
+**Built for Windows** | **Powered by Gemini AI** | **Uses Windows UI Automation**

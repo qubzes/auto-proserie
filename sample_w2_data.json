@@ -1,0 +1,25 @@
+[
+  {
+    "employee_name": "John Smith",
+    "employee_ssn": "123-45-6789",
+    "employee_address": "123 Main St",
+    "employee_city": "New York",
+    "employee_state": "NY",
+    "employee_zip": "10001",
+    "employer_name": "ABC Corporation",
+    "employer_ein": "12-3456789",
+    "employer_address": "456 Business Ave",
+    "employer_city": "New York",
+    "employer_state": "NY",
+    "employer_zip": "10002",
+    "wages": "75000.00",
+    "federal_tax_withheld": "12500.00",
+    "social_security_wages": "75000.00",
+    "social_security_tax": "4650.00",
+    "medicare_wages": "75000.00",
+    "medicare_tax": "1087.50",
+    "state": "NY",
+    "state_wages": "75000.00",
+    "state_tax": "4500.00"
+  }
+]
