@@ -1,0 +1,24 @@
+# UI Automation and Accessibility
+pyautogui>=0.9.54
+pygetwindow>=0.0.9
+pillow>=10.0.0
+opencv-python>=4.8.0
+
+# macOS specific accessibility (for inspecting desktop apps)
+pyobjc-framework-Cocoa>=9.0
+pyobjc-framework-Quartz>=9.0
+atomacos>=3.2.0  # macOS accessibility API
+
+# AI/LLM Integration
+google-generativeai>=0.3.0
+
+# Computer Vision (optional, for OCR and visual matching)
+pytesseract>=0.3.10
+easyocr>=1.7.0
+
+# Data handling
+pandas>=2.0.0
+python-dotenv>=1.0.0
+
+# Utilities
+pydantic>=2.0.0
